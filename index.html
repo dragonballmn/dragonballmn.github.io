@@ -27,7 +27,7 @@
 			background-size: cover;
 		}
 
-		#season {
+		#szn {
 			height: 25px;
 			font-size: 20px;
 			font-weight: bold;
@@ -36,10 +36,10 @@
 			border: none;
 			border-radius: 5px;
 			text-align-last: center;
-			transform: translateY(170px);
+			transform: translateY(335px);
 		}
 
-		#movie {
+		#mov {
 			height: 25px;
 			font-size: 20px;
 			font-weight: bold;
@@ -48,19 +48,18 @@
 			border: none;
 			border-radius: 5px;
 			text-align-last: center;
-			transform: translateY(190px);
+			transform: translateY(355px);
 		}
 
-		#v1,
-		#v2 {
-			transform: translateY(215px);
+		#player {
+			transform: translateY(380px);
 		}
 
-		#buttons {
-			transform: translateY(245px);
+		#btns {
+			transform: translateY(410px);
 		}
 
-		.button {
+		.btn {
 			display: inline-block;
 			height: 25px;
 			font-size: 15px;
@@ -77,29 +76,23 @@
 			transform: translateY(-2px);
 		}
 
-		.button:hover {
-			background-color: gainsboro;
-			;
-		}
-
-		.button:active {
-			background-color: gainsboro;
+		.btn:active {
 			box-shadow: 0 3px darkgray;
 			transform: translateY(0px);
 		}
 
-		.button:disabled {
+		.btn:disabled {
 			background-color: darkgray;
 			box-shadow: 0 5px gray;
 		}
 
-		#episode {
+		#ep {
 			color: black;
 			font-size: 15px;
 			font-weight: bold;
 		}
 
-		#episodeNumber {
+		#epN {
 			width: 30px;
 			height: 20px;
 			text-align: center;
@@ -112,13 +105,13 @@
 			border-radius: 5px;
 		}
 
-		#episodeNumber::-webkit-outer-spin-button,
-		#episodeNumber::-webkit-inner-spin-button {
+		#epN::-webkit-outer-spin-button,
+		#epN::-webkit-inner-spin-button {
 			-webkit-appearance: none;
 			margin: 0;
 		}
 
-		#episodeNumber[type=number] {
+		#epN[type=number] {
 			-moz-appearance: textfield;
 		}
 	</style>
@@ -127,99 +120,75 @@
 <body>
 	<center>
 		<div id="main">
-			<div style="padding-top: 165px;"></div>
-			<select id="season" onchange="changeSeason()"></select><br>
-			<select id="movie" onchange="changeMovie()"></select>
-			<div>
-				<iframe id="v1" width="560" height="315" src="" frameborder=0 allow="autoplay" allowfullscreen></iframe>
-				<video id="v2" width="560" height="315" src="" controls></video>
+			<select id="szn" onchange="updSzn()"></select><br>
+			<select id="mov" onchange="updMov()"></select>
+			<div id="player">
+				<iframe id="frm" width="560" height="315" src="" frameborder=0 allow="autoplay"
+					allowfullscreen></iframe>
+				<video id="vid" width="560" height="315" src="" controls></video>
 			</div>
-			<div id="buttons">
-				<button id="first" class="button" onclick="firstEpisode()">Эхнийх</button>
-				<button id="previous" class="button" onclick="previousEpisode()">Өмнөх</button>
-				<label id="episode">Анги:</label>
-				<input id="episodeNumber" type="number" value="1" min="1" max="1000" onchange="changeEpisode()">
-				<button id="next" class="button" onclick="nextEpisode()">Дараах</button>
-				<button id="last" class="button" onclick="lastEpisode()">Сүүлийнх</button>
+			<div id="btns">
+				<button id="fst" class="btn" onclick="updEp(-1000)">Эхнийх</button>
+				<button id="prv" class="btn" onclick="updEp(-1)">Өмнөх</button>
+				<label id="ep">Анги:</label>
+				<input id="epN" type="number" value="1" min="1" max="1000" onchange="updEp()">
+				<button id="nxt" class="btn" onclick="updEp(1)">Дараах</button>
+				<button id="lst" class="btn" onclick="updEp(1000)">Сүүлийнх</button>
 			</div>
-			<p id="demo"></p>
 		</div>
 	</center>
 	<script>
-		var seasons = [["Dragon Ball", 153], ["Dragon Ball Kai", 91], ["Super Dragon Ball Heroes", 6]];
-		var movies = [
+		var szns = [["Dragon Ball", 153], ["Dragon Ball Kai", 91], ["Super Dragon Ball Heroes", 6]];
+		var movs = [
 			["Dragon Ball Z: Battle of Gods", "https://animax-a.cdn.homenet.mn/rencoded/animemovie/dbz/dbz_godwar.mp4"],
 			["Dragon Ball Z: Resurrection ‘F’", "https://animax-a.cdn.homenet.mn/rencoded/animemovie/dbz/dbz_ressurection.mp4"],
 		];
 		var dbEps = [610951432710, 610951498246, 611595389446, 611597552134, 611601877510, 611601811974, 611601746438, 611605613062, 611605678598, 612373039622, 612373105158, 612373301766, 612374612486, 612374743558, 612374940166, 612373563910, 612374481414, 612374350342, 612374022662, 612373957126, 612374678022, 612373694982, 612374809094, 612374219270, 612374546950, 612374088198, 612373432838, 612373826054, 612373891590, 612373629446, 612374153734, 612374284806, 612373760518, 612374415878, 612373498374, 612373367302, 612375464454, 612375333382, 612375398918, 612375529990, 612376709638, 612376250886, 612376316422, 612376381958, 612376513030, 612376578566, 612376775174, 612375595526, 612376644102, 612375857670, 612376119814, 612375988742, 612375726598, 612376185350, 612375923206, 612376054278, 612375661062, 612375792134, 612376447494, 552880179718, 553624996358, 554765978118, 554766043654, 554766109190, 554766174726, 554799598086, 554799794694, 554799925766, 554799991302, 554800122374, 554850191878, 554850257414, 561901406726, 561901472262, 608421480966, 608421546502, 608421612038, 608421743110, 608421808646, 610940422662, 610940553734, 608448285190, 616091486726, 616091617798, 616767883782, 624694004230, 624694200838, 628415793670, 650068756998, 634697746950, 1492438026968, 638803380742, 642976385542, 649908849158, 649908914694, 661241334278, 678299830790, 678299896326, 688101722630, 688101788166, 707587410438, 707587475974, 707587541510, 707587607046, 710308989446, 712556481030, 766716676614, 766716742150, 766716938758, 766719298054, 766719429126, 766719494662, 798664428038, 798664559110, 798664624646, 798664690182, 798719805958, 798722034182, 798722099718, 798722165254, 839804914182, 839805110790, 839804979718, 839805176326, 839805045254, 839835847174, 839835978246, 839836109318, 839836043782, 839835912710, 839875234310, 839875365382, 839875496454, 839875430918, 839875299846, 840466172422, 840466303494, 840466369030, 852305709574, 852305644038, 851098667526, 852314098182, 852314360326, 851098733062, 854942419462, 854952118790, 854952184326, 854962670086, 854967388678, 854973155846, 854980168198, 854984690182, 854984755718];
-		var e = id("episodeNumber"), mov = id("movie"), isMovie = false, firstEp = 1, lastEp = 153, s = 0;
+		var e = id("epN"), szn = id("szn"), mov = id("mov"), isEp = true, fstEp = 1, lstEp = 153;
 		init();
 		function init() {
-			var season = ""
-			for (var i = 0; i < seasons.length; i++)
-				season += "<option value=\"" + i + "\">" + seasons[i][0] + "</option>";
-			id("season").innerHTML = season;
-			var movie = "<option value=\"\">Бүрэн Хэмжээний Кино</option>";
-			for (var i = 0; i < movies.length; i++)
-				movie += "<option value=\"" + movies[i][1] + "\">" + movies[i][0] + "</option>";
-			mov.innerHTML = movie;
-			changeSeason();
+			var sznData = ""
+			for (var i = 0; i < szns.length; i++)
+				sznData += "<option value=\"" + i + "\">" + szns[i][0] + "</option>";
+			szn.innerHTML = sznData;
+			var movData = "<option value=\"\">Бүрэн Хэмжээний Кино</option>";
+			for (var i = 0; i < movs.length; i++)
+				movData += "<option value=\"" + movs[i][1] + "\">" + movs[i][0] + "</option>";
+			mov.innerHTML = movData;
+			updSzn();
 		}
-		function changeSeason() {
-			s = id("season").value;
-			lastEp = seasons[s][1];
-			e.value = 1;
-			changeEpisode();
+		function updSzn() {
+			lstEp = szns[szn.value][1];
+			updEp();
 		}
-		function id(elementId) {
-			return document.getElementById(elementId);
-		}
-		function firstEpisode() {
-			e.value = firstEp;
-			changeEpisode();
-		}
-		function previousEpisode() {
-			e.value--;
-			changeEpisode();
-		}
-		function nextEpisode() {
-			e.value++;
-			changeEpisode();
-		}
-		function lastEpisode() {
-			e.value = lastEp;
-			changeEpisode();
-		}
-		function changeEpisode() {
+		function id(eId) { return document.getElementById(eId); }
+		function updEp(d = 0) {
+			isEp = true;
 			mov.value = "";
-			isMovie = false;
-			if (e.value < firstEp)
-				e.value = firstEp;
-			else if (e.value > lastEp)
-				e.value = lastEp;
-			id("first").disabled = id("previous").disabled = e.value == firstEp;
-			id("last").disabled = id("next").disabled = e.value == lastEp;
-			videoSource();
+			e.value = parseInt(e.value) + d;
+			e.value = e.value < fstEp ? fstEp : e.value > lstEp ? lstEp : e.value;
+			id("fst").disabled = id("prv").disabled = e.value == fstEp;
+			id("lst").disabled = id("nxt").disabled = e.value == lstEp;
+			vidSrc();
 		}
-		function changeMovie() {
-			var m = mov.value;
-			if (m == 0)
-				changeEpisode();
+		function updMov() {
+			if (mov.value == 0)
+				updEp();
 			else {
-				isMovie = true;
-				videoSource();
+				isEp = false;
+				vidSrc();
 			}
 		}
-		function videoSource() {
-			var src = isMovie ? mov.value :
-				s == 0 ? "https://ok.ru/videoembed/" + dbEps[e.value - 1] :
-					s == 1 ? "https://animax-a.cdn.homenet.mn/rencoded/dball/DragonBallKai_#.mp4".replace("#", e.value.padStart(2, '0')) :
+		function vidSrc() {
+			var src = !isEp ? mov.value :
+				szn.value == 0 ? "https://ok.ru/videoembed/" + dbEps[e.value - 1] :
+					szn.value == 1 ? "https://animax-a.cdn.homenet.mn/rencoded/dball/DragonBallKai_#.mp4".replace("#", e.value.padStart(2, '0')) :
 						"https://animax-a.cdn.homenet.mn/rencoded/off/dragonballsuper/dragonballsuper_#.mp4".replace("#", e.value.padStart(2, '0'));
-			var isVideo = !src.includes("ok.ru");
-			id("v1").style.display = !isVideo ? "block" : "none";
-			id("v2").style.display = isVideo ? "block" : "none";
-			id(isVideo ? "v2" : "v1").src = src;
-			id(!isVideo ? "v2" : "v1").src = "";
+			var isVid = !src.includes("ok.ru");
+			id("frm").style.display = !isVid ? "block" : "none";
+			id("vid").style.display = isVid ? "block" : "none";
+			id(isVid ? "vid" : "frm").src = src;
+			id(!isVid ? "vid" : "frm").src = "";
 		}
 	</script>
 </body>
